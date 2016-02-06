@@ -104,17 +104,17 @@ pay_in_page: true
 # If payment is in page you can set 2 options
 
 # this is the text for the button
-payment_button_1: "Become a founder"
+payment_button_1: "Fund This"
 # this is the headline
 payment_headline_1: "Be one of only 200 “Founders” and fund our development!"
 # this is the description
 payment_description_1: "You’ll get a limited addition Founders T-Shirt, and a “Gold” note on your profile for $250! "
 # you have to set the price as integer so 1000 is equivalent to 10.00$ or 10$
-payment_price_1: 25000
+payment_price_1: 2500
 special_1: "founder"
 
 # second button
-payment_button_2: "Special Rate Pre-buy"
+payment_button_2: "Pre-launch Special"
 payment_headline_2: "Get a years service at this SPECIAL introductory rate"
 payment_description_2: "Pre-order for just $49.95, the whole first year. "
 payment_price_2: 4995
@@ -122,15 +122,15 @@ payment_price_2: 4995
 
 ###################Scalable###################
 ###man and woman descriptive and hex colours##
-m_colors: ['ash', 'safety green']
-m_hex: ['#d7d6d8', '#cde82b']
-w_colors: ['light blue', 'safety pink']
-w_hex: ['#afcdf3', '#e989a4']
+m_colors: ['ice grey', 'carolina blue']
+m_hex: ['#adaea9', '#91b0e6']
+w_colors: ['ice grey', 'caroloina blue']
+w_hex: ['#adaea9', '#91b0e6']
 m_shirt_model: "gildan-ultra-cotton-t-shirt"
 w_shirt_model: "gildan-ultra-ladies-t-shirt"
 
 ### the designId for the order################
-designId: "56a8b147c2bea75a4095bcd3"
+designId: "56b6592459379ac931b8a000"
 ### ScalablePress API#########################
 scalable_key: <%= ENV['SCALABLE_KEY'] %>
 
