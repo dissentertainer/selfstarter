@@ -136,7 +136,7 @@ function printfulCall(redirectTo) {
 */
 
 
-//this is the function that gets called once we receive a success callback from our ajax for creating a stripe charge, as you see it takes two values - data is what was returned by our app and founder is simple a boolean var stating if this payment includes a t-shirt order or not.
+//this is the function that gets called once we receive a success callback from our ajax for creating a stripe charge, as you see it takes two values - data is what was returned by our app and founder is simply a  var stating if this payment includes a t-shirt order or not.
 function selectDetails(data, founder) {
   //since we returned the data as a "json" object from our back-end we need to parse it so we can access it as a regular object.
   data = JSON.parse(data);
@@ -222,9 +222,7 @@ function format_address(data) {
 function scalablepressCall(redirectTo, size, gender, address) {
   //we start by making a jquery ajax call
   $.ajax({
-    //here we set the path of the call we already have this routed
           url: '/preorder/scalablepresscall',
-    //the type...
           type: "POST",
           dataType: "html",
     //here we pass the data we want to work with. The size, gender and the address which is actually the hash that was returned by format_address
@@ -248,9 +246,12 @@ function checkResponse(data) {
   var eachToken = [];
   //again we parse the data so we can access it as a regular object
   data = JSON.parse(data);
+  console.log(data);
   //we use jquery $.each with the "data" object, because we will have an array of answers as long as we have more than one colour to test. And as I wrote there, we might have a combination of color & size unavailable
   //but somehow another combination might be available. So we loop through all the answers - they end up here as [ { answer1 }, { answer2 } ], but even if only one answer it will still be [ { answer1 } ]
   $.each(data, function(i, _this) {
+    console.log(i);
+    console.log(_this);
     // "i" is the index and "_this" is the object itself, in this case it's the hash we passed from the response
     if (_this['status'] == 'ok') {
       // if the status is "ok" we know this color is available and we "push" it into our "colors" array, doing the same with the corresponding "orderToken"
@@ -260,12 +261,9 @@ function checkResponse(data) {
       // if the status isn't "ok" then we check which kind of error. right now the address part doesn't work as we've changed it to stripe address, but before this was how we checked if the address was valid.
       switch (_this['type']) {
       case 'address':
-        $('#alert_' + _this['field']).show();
-        $('#alert_shipping').show(400, 'swing', setTimeout(function() {
-          $('#alert_shipping').hide(400, 'swing');
-          $('#alert_' + _this['field']).hide();
-        }, 3000));
-        return false;
+        alert("There is a problem with your shipping address, you'll be contacted soon to sort it out!");
+        $.magnificPopup.close();
+        window.location.href = _this['path'];
       case 'product':
         //in case the availability is off we show the "alert" section for it
         $('#alert_not_available').show(400, 'swing', setTimeout(function() {
@@ -320,6 +318,8 @@ function scalablepressPlaceOrder(token) {
           success: function(data) {
             //and we just redirect the window to the path we'll get as an answer from our back-end - switch batch to preorder_controller.api to follow through
             window.location.href = data;
+            //for debugging
+            //console.log(data);
           }
   });
 };
