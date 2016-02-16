@@ -14,7 +14,7 @@ gem "config"
 gem 'magnific-popup-rails'
 
 group :development do
-  gem 'sqlite3'
+  gem 'pg'
   gem 'pry-rails'
 end
 

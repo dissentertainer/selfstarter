@@ -41,24 +41,51 @@ class Order < ActiveRecord::Base
   # goal is a dollar amount, not a number of backers, beause you may be using the multiple payment options component
   # by setting Settings.use_payment_options == true
   def self.goal
-    Settings.project_goal
+    if Settings.pay_in_page && Settings.pip_goal
+      p1 = Settings.payment_price_1.to_s
+      p1 = p1[0...-2]
+      goal = Settings.pip_max_backers[0] * p1.to_i
+      if Settings.counts_2
+        p2 = Settings.payment_price_2.to_s
+        p2 = p2[0...-2]
+        goal += Settings.pip_max_backers[1] * p2.to_i
+      end
+    else
+      goal = Settings.project_goal
+    end
+    goal
   end
 
   def self.percent
-    (Order.revenue.to_f / Order.goal.to_f) * 100.to_f
+    (Order.revenue / Order.goal.to_f) * 100.to_f
   end
 
   # See what it looks like when you have some backers! Drop in a number instead of Order.count
   def self.backers
-    Order.count
+    if Settings.pay_in_page
+      total = Order.where(payment_option_id: 1).count
+      if Settings.counts_2
+        total += Order.where(payment_option_id: 2).count
+      end
+    else
+      total = Order.count
+    end
+    total
   end
+  
 
   def self.revenue
     if Settings.use_payment_options
-      PaymentOption.joins(:orders).sum(:price).to_f
+      revenue = PaymentOption.joins(:orders).sum(:price).to_f
+    elsif Settings.pay_in_page
+      revenue = Order.where(payment_option_id: 1).sum(:price).to_f
+      if Settings.counts_2
+        revenue += Order.where(payment_option_id: 2).sum(:price).to_f
+      end
     else
-      Order.sum(:price).to_f
-    end 
+      revenue = Order.sum(:price).to_f
+    end
+    revenue.to_f
   end
 
   validates_presence_of :name, :price, :user_id

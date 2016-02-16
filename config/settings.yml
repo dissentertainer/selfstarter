@@ -45,15 +45,15 @@ use_video_placeholder: false
 
 #payments
 
-use_payment_options: true
+use_payment_options: false
 
 
 # Stripe stuff. Stripe.com 
 
 #stripe_api_key: "YOUR_STRIPE_API_KEY"
 #stripe_public_key: "YOUR_STRIPE_PUBLIC_KEY"
-stripe_public_key: <%= ENV['STRIPE_PUBLIC_KEY'] %>
-stripe_api_key: <%= ENV['STRIPE_API_KEY'] %>
+stripe_public_key: <%= ENV['STRIPE_PUBLIC_KEY'] || raise('env STRIPE_PUBLIC_KEY not set') %>
+stripe_api_key: <%= ENV['STRIPE_API_KEY'] || raise('env STRIPE_API_KEY not set') %>
 currency: "usd" # usd, eur etc
 price: 	19.95
 payment_description: "You really should change this text because people will see it on their list of transactions!"
@@ -62,10 +62,10 @@ payment_description: "You really should change this text because people will see
 printful_key: <%= ENV['PRINTFUL_KEY'] %>
 
 # Mailgun API
-mailgun_key: <%= ENV['MAILGUN_KEY'] %>
-mailgun_domain: "2thegig.com"
-mailgun_from: "general@2thegig.com"
-mailgun_to: "micaelnussbaumer@gmail.com" #"orders@ironlatch.com"
+mailgun_key: <%= ENV['MAILGUN_KEY'] || raise('env MAILGUN_KEY not set') %>
+mailgun_domain: <%= ENV['MAILGUN_DOMAIN'] || raise('env MAILGUN_DOMAIN not set') %> #"2thegig.com"
+mailgun_from: <%= ENV['MAILGUN_FROM'] || raise('env MAILGUN_FROM not set') %> #"general@2thegig.com"
+mailgun_to: <%= ENV['MAILGUN_TO'] || raise('env MAILGUN_TO not set') %> #"micaelnussbaumer@gmail.com" #"orders@ironlatch.com"
 
 
 # On Lockitron, it's "backers"
@@ -105,7 +105,11 @@ tweet_text: "to crowdfund"
 google_id: <%= ENV['GOOGLE_ID'] %>
 
 # Set if payment is in the main page or in options page
-pay_in_page: false
+pay_in_page: true
+# Set pip_goal to true if you want the goal to be calculated by the maximum backers for each option you mentioned
+pip_goal: true
+# In this case if you put [200,0] the goal will be (200 * payment_price_1) + (0 * payment_price_2)
+pip_max_backers: [200,0]
 
 # If payment is in page you can set 2 options
 
@@ -117,13 +121,18 @@ payment_headline_1: "Be one of only 200 “Founders” and fund our development!
 payment_description_1: "You’ll get a limited edition Founders T-Shirt, and a “Gold” note on your profile for $250! "
 # you have to set the price as integer so 1000 is equivalent to 10.00$ or 10$
 payment_price_1: 25000
+# to decide if it has t-shirt included or not
 special_1: "founder"
+# to decide if it counts towards the backers & total goal/revenue or not
+counts_1: true
 
 # second button
 payment_button_2: "Special Rate Pre-buy"
 payment_headline_2: "Get a years service at this SPECIAL introductory rate"
 payment_description_2: "Pre-order for just $49.95, the whole first year. "
 payment_price_2: 4995
+special_2: false
+counts_2: false
 
 
 ###################Scalable###################
@@ -138,7 +147,7 @@ w_shirt_model: "gildan-ultra-ladies-t-shirt"
 ### the designId for the order################
 designId: "56a8b147c2bea75a4095bcd3"
 ### ScalablePress API#########################
-scalable_key: <%= ENV['SCALABLE_KEY'] %>
+scalable_key: <%= ENV['SCALABLE_KEY'] || raise('env SCALABLE_KEY not set') %>
 
 # If you want to change the images for the key points (e.g. "Kickstarter is not a store")
 # They're in app/assets/images/#{pointer_number}-background.png

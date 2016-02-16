@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20160202222114) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "orders", id: false, force: :cascade do |t|
     t.string   "token"
     t.string   "transaction_id"
@@ -50,7 +53,14 @@ ActiveRecord::Schema.define(version: 20160202222114) do
     t.string   "currency"
   end
 
-# Could not dump table "users" because of following NoMethodError
-#   undefined method `[]' for nil:NilClass
+  create_table "users", force: :cascade do |t|
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.string   "stripe_charge_id"
+    t.string   "api_order_id"
+    t.json     "order_data",       default: {}
+  end
 
 end
