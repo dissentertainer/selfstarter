@@ -15,8 +15,8 @@ class PreorderController < ApplicationController
     client = Stripe::Customer.create(
       :email => params[:email]
     )
-    card = client.cards.create(:card => params[:stripe_token])
-    client.default_card = card.id
+    card = client.sources.create(:source => params[:stripe_token])
+    client.default_source = card.id
     order_details
     charge = Stripe::Charge.create(
       :amount => @integer_amount,
