@@ -11,11 +11,11 @@ class PreorderController < ApplicationController
   end
 
   def order
-    @user = User.find_or_create_by(:email => params[:email])
+    @user = User.find_or_create_by(:email => order_params[:email])
     client = Stripe::Customer.create(
-      :email => params[:email]
+      :email => order_params[:email]
     )
-    card = client.sources.create(:source => params[:stripe_token])
+    card = client.sources.create(:source => order_params[:stripe_token])
     client.default_source = card.id
     order_details
     charge = Stripe::Charge.create(
@@ -39,7 +39,7 @@ class PreorderController < ApplicationController
 
   def order_details
     if Settings.use_payment_options
-      @payment_option_id = params['payment_option']
+      @payment_option_id = order_params['payment_option']
       raise Exception.new("No payment option was selected") if @payment_option_id.nil?
       payment_option = PaymentOption.find(@payment_option_id)
       @amount = payment_option.amount
@@ -54,9 +54,14 @@ class PreorderController < ApplicationController
   end
 
   def share
-    @order = Order.find_by(:uuid => params[:uuid])
+    @order = Order.find_by(:uuid => order_params[:uuid])
   end
 
   def ipn
   end
+
+  def order_params
+    params.permit(:name, :email, :payment_option, :stripe_token, :uuid)
+  end
+
 end
